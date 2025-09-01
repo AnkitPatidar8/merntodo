@@ -7,7 +7,7 @@ const App = () => {
   const [loading, setLoading] = useState(true)
   const [title, setTitle] = useState('')
 
-  const baseURL = 'http://localhost:5000/api' // backend URL
+  const baseURL = 'https://merntodo-ebon.vercel.app/api' // backend URL
 
   // fetch todos
   const fetchTodos = async () => {
