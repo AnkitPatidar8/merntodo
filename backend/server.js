@@ -10,7 +10,15 @@ const todosRouter = require('./routes/todos');
 
 
 const app = express();
-app.use(cors());
+app.use(cors({
+  origin: 'https://68b5f9f09b84c895797bcbb9--idyllic-taffy-ccbe44.netlify.app',
+  methods: ['GET','POST','PUT','DELETE','OPTIONS'],
+  allowedHeaders: ['Content-Type']
+}));
+
+// Handle OPTIONS requests for preflight
+app.options('*', cors());
+
 app.use(express.json());
 
 
