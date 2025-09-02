@@ -7,28 +7,42 @@ const todosRouter = require('./routes/todos');
 
 const app = express();
 
-// CORS middleware
+// CORS middleware for your Netlify frontend
 app.use(cors({
-  origin: 'https://68b5f9f09b84c895797bcbb9--idyllic-taffy-ccbe44.netlify.app',
-  methods: ['GET','POST','PUT','DELETE','OPTIONS'],
+  origin: 'https://idyllic-taffy-ccbe44.netlify.app', // exact Netlify URL
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type'],
-  credentials: true // if you need cookies/auth headers
+  credentials: true
 }));
 
+// Body parser
 app.use(express.json());
 
-const PORT = process.env.PORT || 5000;
+// MongoDB connection
+const connectDB = async () => {
+  try {
+    await mongoose.connect(process.env.MONGODB_URI, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
+    console.log('MongoDB connected');
+  } catch (err) {
+    console.error('MongoDB connection error:', err);
+    process.exit(1);
+  }
+};
 
-mongoose.connect(process.env.MONGODB_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-})
-.then(() => console.log('Connected to MongoDB'))
-.catch(err => {
-  console.error('MongoDB connection error:', err.message);
-  process.exit(1);
-});
+connectDB();
 
+// Routes
 app.use('/api/todos', todosRouter);
 
+// Error handling middleware (catches unexpected errors)
+app.use((err, req, res, next) => {
+  console.error('Unhandled error:', err);
+  res.status(500).json({ message: 'Internal Server Error' });
+});
+
+// Start server
+const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
