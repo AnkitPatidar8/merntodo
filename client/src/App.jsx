@@ -7,13 +7,13 @@ const App = () => {
   const [loading, setLoading] = useState(true)
   const [title, setTitle] = useState('')
 
-  const baseURL = 'https://merntodo-ebon.vercel.app/api/todos' // backend URL
+  const baseURL = 'https://merntodo-ebon.vercel.app' // backend URL
 
   // fetch todos
   const fetchTodos = async () => {
     try {
       setLoading(true)
-      const res = await axios.get(`${baseURL}`)
+      const res = await axios.get(`${baseURL}/todos`)
       setTodos(res.data)
     } catch (err) {
       console.error(err)
@@ -29,7 +29,7 @@ const App = () => {
     e.preventDefault()
     if (!title.trim()) return
     try {
-      const res = await axios.post(`${baseURL}`, { title })
+      const res = await axios.post(`${baseURL}/todos`, { title })
       setTodos(prev => [res.data, ...prev])
       setTitle('')
     } catch (err) {
@@ -40,7 +40,7 @@ const App = () => {
   // toggle todo
   const toggleTodo = async (id, completed) => {
     try {
-      const res = await axios.put(`${baseURL}/${id}`, { completed })
+      const res = await axios.put(`${baseURL}/todos/${id}`, { completed })
       setTodos(prev => prev.map(t => t._id === id ? res.data : t))
     } catch (err) {
       console.error(err)
@@ -50,7 +50,7 @@ const App = () => {
   // delete todo
   const deleteTodo = async (id) => {
     try {
-      await axios.delete(`${baseURL}/${id}`)
+      await axios.delete(`${baseURL}/todos/${id}`)
       setTodos(prev => prev.filter(t => t._id !== id))
     } catch (err) {
       console.error(err)
